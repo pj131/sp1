@@ -8,12 +8,15 @@ class Aicai1Spider(scrapy.Spider):
     start_urls = ['https://www.aicai.com/pages/lotnew/zq/index_gdhhspf.shtml']
 
     def parse(self, response):
-        def parse_rq(response):
-            for _list in response.css('div.betPanel'):
-                yield {
-                    'Mod': response.css("div.rqMode::text").extract_first(),
-                    'sp':response.css("div.betChan span.plMod::text").extract(),
+        def parse_rq(res):
+            sps = []
+            for _list in res.css('div.betPanel'):
+                sp = {
+                    'Mod': _list.css("div.rqMode::text").extract_first(),
+                    'sp':_list.css("div.betChan span.plMod::text").extract(),
                 }
+                sps.append(sp)
+            return sps
 
 
         for _list in response.css("tr.jq_gdhhspf_match_select_tr"):
@@ -24,7 +27,7 @@ class Aicai1Spider(scrapy.Spider):
                 'zhuan': _list.css("td.zhuanTd div span a::text").extract_first(),
                 'zhu': _list.css("td.zhuTeamTd span.dmMod::text").extract_first(),
                 'ke': _list.css("td.keTeamTd span.dmMod::text").extract_first(),
-                # 'rq': parse_rq(_list.css("td.rqTd")),
+                'rq': parse_rq(_list.css("td.rqTd").extract_first()),
             }
         print('................')
 
