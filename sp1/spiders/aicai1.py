@@ -10,10 +10,10 @@ class Aicai1Spider(scrapy.Spider):
     def parse(self, response):
         def parse_rq(res):
             sps = []
-            for _list in res.css('div.betPanel'):
+            for lst in res.css('div.betPanel'):
                 sp = {
-                    'Mod': _list.css("div.rqMode::text").extract_first(),
-                    'sp':_list.css("div.betChan span.plMod::text").extract(),
+                    'Mod': lst.css("div.rqMod::text").extract_first().strip(),
+                    'sp':lst.css("div.betChan span.plMod::text").extract(),
                 }
                 sps.append(sp)
             return sps
@@ -27,7 +27,7 @@ class Aicai1Spider(scrapy.Spider):
                 'zhuan': _list.css("td.zhuanTd div span a::text").extract_first(),
                 'zhu': _list.css("td.zhuTeamTd span.dmMod::text").extract_first(),
                 'ke': _list.css("td.keTeamTd span.dmMod::text").extract_first(),
-                'rq': parse_rq(_list.css("td.rqTd").extract_first()),
+                'rq': parse_rq(_list.css("td.rqTd")),
             }
         print('................')
 
